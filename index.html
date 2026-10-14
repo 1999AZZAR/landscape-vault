@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Landscape Vault: Archival Shan Shui Procedural Synthesis Engine of Azzar Budiyanto. Procedural Chinese landscape painting scroll generator, Gongbi ink wash plates, and topographical telemetry.">
+    <meta name="description" content="Landscape Vault: Archival Shan Shui & Procedural Landscape Specimen Vault of Azzar Budiyanto. A high-end specimen vault for procedural Chinese landscape scroll synthesis.">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <link rel="canonical" href="https://landscape-vault.glassgallery.my.id/">
     
@@ -17,7 +17,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
-    <title>Landscape Vault: Digital Archive & Procedural Shan Shui Vault</title>
+    <title>Landscape Vault: Digital Archive and Archival Specimen Vault</title>
     
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
@@ -48,7 +48,7 @@
           "@id": "https://landscape-vault.glassgallery.my.id/#website",
           "url": "https://landscape-vault.glassgallery.my.id/",
           "name": "Landscape Vault | Archival Shan Shui Synthesis",
-          "description": "Procedural Chinese landscape scroll synthesis engine, Shan Shui vector plate repository, and topographical telemetry.",
+          "description": "Procedural Chinese landscape painting archive, continuous handscroll synthesis, and vector plate engine based on Lingdong Huang's shan-shui-inf and Swiss-Archival design.",
           "publisher": {
             "@id": "https://glassgallery.my.id/#organization"
           },
@@ -62,7 +62,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Serif+SC:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -101,7 +101,7 @@
 
         .font-tech { 
             font-family: 'JetBrains Mono', monospace; 
-            letter-spacing: 0.08em;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
         }
 
@@ -123,22 +123,23 @@
             border-color: var(--archival-accent); 
         }
 
-        #render-target svg {
+        #render-target canvas, #render-target svg {
             transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
             max-width: 95%;
-            max-height: 560px;
+            max-height: 95%;
             width: auto;
             height: auto;
+            object-fit: contain;
             box-shadow: 0 6px 20px -8px rgba(42, 37, 32, 0.12);
         }
 
         /* Matrix Control Styling */
-        .ratio-btn, .pigment-btn {
+        .ratio-btn, .chroma-btn {
             border: 1px solid var(--archival-muted);
             transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
         }
-        .ratio-btn:hover, .pigment-btn:hover { border-color: var(--archival-accent); color: var(--archival-accent); }
-        .ratio-btn[data-active="true"], .pigment-btn[data-active="true"] {
+        .ratio-btn:hover, .chroma-btn:hover { border-color: var(--archival-accent); color: var(--archival-accent); }
+        .ratio-btn[data-active="true"], .chroma-btn[data-active="true"] {
             background: var(--archival-accent);
             color: var(--archival-surface);
             border-color: var(--archival-accent);
@@ -179,201 +180,250 @@
             transition: opacity 0.3s ease;
             pointer-events: auto !important;
             cursor: pointer !important;
+            z-index: 100;
         }
-        #specimen-container:hover #fullscreen-btn {
+
+        .group:hover #fullscreen-btn {
             opacity: 1;
         }
 
-        #fullscreen-viewer {
-            display: none;
-            position: fixed;
-            inset: 0;
-            z-index: 99999;
-            background: rgba(30, 26, 22, 0.88);
-            backdrop-filter: blur(12px);
-            align-items: center;
-            justify-content: center;
-        }
         #fullscreen-viewer.active {
-            display: flex;
+            display: block;
+            animation: fadeIn 0.3s ease-out;
         }
-        #fullscreen-viewer svg {
-            max-width: 92vw;
-            max-height: 86vh;
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        #viewer-content svg, #viewer-content canvas {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
             object-fit: contain;
-            box-shadow: 0 12px 48px -12px rgba(0, 0, 0, 0.5);
         }
 
         /* Embed Mode */
-        body[data-mode="embed"] {
-            background: #EFE9DC !important;
-            background-image: none !important;
-            overflow: hidden !important;
+        body[data-mode="embed"] { 
+            background-color: #F7F3EB;
+            padding: 0; 
+            display: block;
+            overflow: hidden;
         }
-        body[data-mode="embed"] header,
-        body[data-mode="embed"] #controls-panel,
-        body[data-mode="embed"] #specimen-metadata,
-        body[data-mode="embed"] footer:not(#plate-footer) {
+        
+        body[data-mode="embed"] #fullscreen-viewer,
+        body[data-mode="embed"] #fullscreen-btn {
             display: none !important;
         }
-        body[data-mode="embed"] main {
-            display: flex !important;
-            width: 100vw !important;
-            height: 100vh !important;
-            max-width: none !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            align-items: center !important;
-            justify-content: center !important;
+        body[data-mode="embed"] main { 
+            max-width: none; 
+            width: 100vw; 
+            height: 100vh; 
+            margin: 0; 
+            display: block;
+            gap: 0;
+            space-y: 0;
         }
-        body[data-mode="embed"] #specimen-container {
-            width: 100% !important;
-            height: 100% !important;
-            border: none !important;
-            box-shadow: none !important;
-            background: transparent !important;
+        body[data-mode="embed"] section,
+        body[data-mode="embed"] #specimen-metadata,
+        body[data-mode="embed"] footer { 
+            display: none !important; 
+        }
+        body[data-mode="embed"] .surface-card { 
+            border: none; 
+            box-shadow: none; 
+            background: transparent; 
+            height: 100%; 
+            width: 100%;
+            padding: 0;
+            border-radius: 0;
+        }
+        body[data-mode="embed"] .absolute { display: none; }
+        body[data-mode="embed"] #render-target {
+            width: 100%;
+            height: 100%;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
         }
         body[data-mode="embed"] #render-target svg {
             max-width: 100% !important;
             max-height: 100% !important;
-            box-shadow: none !important;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain !important;
         }
     </style>
 </head>
-<body class="p-4 md:p-8 relative">
-    <div class="noise-layer"></div>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-8">
 
-    <header class="max-w-7xl mx-auto border-b border-[#DDD5C5] pb-4 mb-6 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
-        <div>
-            <div class="flex items-center gap-2 mb-1">
-                <i class="fa-solid fa-mountain-sun text-[#8B1A1A] text-sm"></i>
-                <h1 class="font-tech text-xs tracking-wider text-[#8B1A1A]">LANDSCAPE_VAULT // PROCEDURAL SHAN SHUI ARCHIVE</h1>
-            </div>
-            <p class="text-xs text-[#7A7068]">ARCHIVAL REPOSITORY & SPECIMEN SYSTEM OF AZZAR BUDIYANTO &middot; BASED ON LINGDONG HUANG (2018)</p>
-        </div>
-        <div class="flex items-center gap-3">
-            <span id="accession-badge" class="font-tech text-[10px] bg-[#DDD5C5] px-2 py-0.5 rounded-xs text-[#2A2520] font-semibold">LSV-00-000000</span>
-            <div class="flex items-center gap-1.5 text-[10px] font-tech text-[#7A7068]">
-                <span class="inline-block w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
-                <span>SYSTEM ACTIVE // PORT 8088</span>
-            </div>
-            <a href="/docs.html" class="font-tech text-[10px] text-[#7A7068] hover:text-[#8B1A1A] border border-[#DDD5C5] px-2 py-0.5 bg-[#EFE9DC] transition-colors">
-                [ DOCS ]
-            </a>
-        </div>
-    </header>
+    <svg class="noise-layer" aria-hidden="true">
+        <filter id="fractalNoise">
+            <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+        </filter>
+        <rect width="100%" height="100%" filter="url(#fractalNoise)"/>
+    </svg>
 
-    <main class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 relative">
-        <!-- Main Specimen Render Target Column -->
-        <section id="specimen-container" class="md:col-span-7 xl:col-span-8 surface-card p-4 md:p-6 rounded-sm flex flex-col justify-between relative min-h-[500px] md:min-h-[640px]">
-            <div class="absolute top-2 left-2 text-[8px] font-tech text-[#7A7068] pointer-events-none select-none">+0.0</div>
-            <div class="absolute top-2 right-2 text-[8px] font-tech text-[#7A7068] pointer-events-none select-none">+0.1</div>
-            <div class="absolute bottom-2 left-2 text-[8px] font-tech text-[#7A7068] pointer-events-none select-none">+0.2</div>
-            <div class="absolute bottom-2 right-2 text-[8px] font-tech text-[#7A7068] pointer-events-none select-none">+0.3</div>
-
-            <!-- Fullscreen Button -->
-            <button id="fullscreen-btn" class="absolute bottom-4 right-4 z-20 font-tech text-[9px] text-[#2A2520] hover:text-[#8B1A1A] bg-[#EFE9DC] hover:bg-[#E8E0D0] border border-[#DDD5C5] hover:border-[#8B1A1A] px-2.5 py-1.5 shadow-sm transition-all flex items-center gap-1.5" title="Expand Fullscreen View">
-                <i class="fa-solid fa-expand text-[10px]"></i>
-                <span class="hidden sm:inline">EXPAND</span>
-            </button>
-
-            <!-- Active Specimen SVG Render Target -->
-            <div id="render-target" class="w-full h-full flex-1 flex items-center justify-center p-2 relative">
-                <!-- Procedural SVG is dynamically mounted here -->
-            </div>
-
-            <footer id="plate-footer" class="border-t border-[#DDD5C5] pt-3 mt-3 flex justify-between items-center text-[10px] font-tech text-[#7A7068]">
-                <span>ARCHIVAL SPECIMEN VIEW // MULTIPLY COMPOSITE</span>
-                <span id="dimension-metric">VIEWPORT: 1200 x 800</span>
-            </footer>
-        </section>
-
-        <!-- Control & Telemetry Column -->
-        <section id="controls-panel" class="md:col-span-5 xl:col-span-4 surface-card p-6 rounded-sm flex flex-col justify-between space-y-6">
-            <div class="space-y-5">
-                <!-- 01. Narrative Injection Seed Input -->
-                <div class="space-y-1.5">
-                    <label class="block font-tech text-[10px] text-[#7A7068] flex items-center justify-between">
-                        <span>01. NARRATIVE_INJECTION_SEED</span>
-                        <span class="text-[9px] text-[#8B1A1A] font-tech font-semibold">DETERMINISTIC</span>
-                    </label>
+    <!-- Fullscreen Viewer Modal -->
+    <div id="fullscreen-viewer" class="fixed inset-0 z-[100] hidden">
+        <div class="absolute inset-0 bg-[#2A2520] bg-opacity-95 backdrop-blur-sm cursor-pointer"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-8 pointer-events-none">
+            <div class="relative w-full h-full max-w-7xl max-h-[90vh] flex flex-col pointer-events-auto">
+                <div class="flex justify-between items-center mb-4 px-2">
+                    <div class="flex items-center gap-4">
+                        <span id="viewer-title" class="font-tech text-[12px] text-[#E8E0D0]">SPECIMEN VIEWER</span>
+                        <span id="viewer-seq" class="font-tech text-[10px] text-[#7A7068]"></span>
+                    </div>
                     <div class="flex gap-2">
-                        <input id="seed-input" type="text" value="Misty Mountain Peaks in Late Autumn Solitude" class="font-tech text-xs p-2.5 w-full rounded-xs select-all focus:ring-1 focus:ring-[#8B1A1A]" placeholder="Inject landscape prompt or seed..." spellcheck="false">
-                        <button id="random-btn" class="font-tech text-xs px-3 border border-[#DDD5C5] bg-[#E8E0D0] hover:border-[#8B1A1A] hover:text-[#8B1A1A] transition-all flex items-center justify-center" title="Random Narrative">
-                            <i class="fa-solid fa-dice text-sm"></i>
+                        <button id="viewer-download-svg" class="font-tech text-[10px] text-[#E8E0D0] hover:text-[#8B1A1A] transition-all flex items-center gap-2 px-3 py-2 border border-[#7A7068] hover:border-[#8B1A1A] bg-[#2A2520] cursor-pointer">
+                            <i class="fa-solid fa-code"></i> SVG
+                        </button>
+                        <button id="viewer-download-png" class="font-tech text-[10px] text-[#E8E0D0] hover:text-[#8B1A1A] transition-all flex items-center gap-2 px-3 py-2 border border-[#7A7068] hover:border-[#8B1A1A] bg-[#2A2520] cursor-pointer">
+                            <i class="fa-solid fa-download"></i> PNG
+                        </button>
+                        <button id="viewer-close" class="font-tech text-[10px] text-[#E8E0D0] hover:text-[#8B1A1A] transition-all flex items-center gap-2 px-3 py-2 border border-[#7A7068] hover:border-[#8B1A1A] bg-[#2A2520] cursor-pointer">
+                            <i class="fa-solid fa-times"></i> CLOSE
                         </button>
                     </div>
-                    <div class="pt-1 flex items-center gap-2">
-                        <span class="text-[8px] font-tech text-[#7A7068] shrink-0">RECOVER ID:</span>
-                        <input id="id-load-input" type="text" class="font-tech text-[9px] px-2 py-1 w-full rounded-xs placeholder-[#7A7068]/60 focus:ring-1 focus:ring-[#8B1A1A]" placeholder="PASTE LSV-XX-XXXXXX" spellcheck="false">
-                    </div>
                 </div>
-
-                <!-- 02. Aspect Ratio Matrix -->
-                <div class="space-y-1.5">
-                    <label class="block font-tech text-[10px] text-[#7A7068] flex items-center justify-between">
-                        <span>02. ASPECT_RATIO_MATRIX</span>
-                        <span class="text-[8px] text-[#7A7068]">9 FORMATS</span>
-                    </label>
-                    <div class="grid grid-cols-3 gap-1.5 text-center font-tech text-[9px]">
-                        <button class="ratio-btn p-1.5 rounded-xs" data-w="1" data-h="1">1:1 SQUARE</button>
-                        <button class="ratio-btn p-1.5 rounded-xs" data-w="4" data-h="5">4:5 HANGING</button>
-                        <button class="ratio-btn p-1.5 rounded-xs" data-w="3" data-h="4">3:4 VERTICAL</button>
-                        <button class="ratio-btn p-1.5 rounded-xs" data-w="2" data-h="3">2:3 GOLDEN</button>
-                        <button class="ratio-btn p-1.5 rounded-xs" data-w="9" data-h="16">9:16 TOWER</button>
-                        <button class="ratio-btn p-1.5 rounded-xs" data-w="5" data-h="4">5:4 DISPLAY</button>
-                        <button class="ratio-btn p-1.5 rounded-xs" data-w="4" data-h="3">4:3 TRADITIONAL</button>
-                        <button class="ratio-btn p-1.5 rounded-xs" data-w="3" data-h="2" data-active="true">3:2 ALBUM</button>
-                        <button class="ratio-btn p-1.5 rounded-xs" data-w="16" data-h="9">16:9 PANORAMA</button>
-                    </div>
+                <div id="viewer-content" class="flex-1 flex items-center justify-center bg-[#EFE9DC] rounded-sm border border-[#7A7068] overflow-hidden p-4">
                 </div>
+            </div>
+        </div>
+    </div>
 
-                <!-- 03. Pigment Wash Style -->
-                <div class="space-y-1.5">
-                    <label class="block font-tech text-[10px] text-[#7A7068] flex items-center justify-between">
-                        <span>03. PIGMENT_WASH_STYLE</span>
-                        <span id="pigment-active-label" class="text-[9px] text-[#8B1A1A] font-tech font-semibold">PINE SOOT</span>
-                    </label>
-                    <div class="grid grid-cols-5 gap-1.5 text-center font-tech text-[8px]">
-                        <button class="pigment-btn p-1.5 rounded-xs truncate" data-pigment="pine-soot" data-active="true" title="Pine Soot (墨黑)">PINE SOOT</button>
-                        <button class="pigment-btn p-1.5 rounded-xs truncate" data-pigment="shallow-umber" title="Shallow Umber (浅绛)">UMBER</button>
-                        <button class="pigment-btn p-1.5 rounded-xs truncate" data-pigment="blue-green" title="Blue-Green (青绿)">BLUE-GRN</button>
-                        <button class="pigment-btn p-1.5 rounded-xs truncate" data-pigment="golden-dusk" title="Golden Dusk (金碧)">GOLDEN</button>
-                        <button class="pigment-btn p-1.5 rounded-xs truncate" data-pigment="mist-ink" title="Mist Ink (云烟)">MIST INK</button>
+    <!-- Main Workspace -->
+    <main class="max-w-[80rem] w-full space-y-6 relative z-10 grid grid-cols-1 md:grid-cols-5 gap-6">
+        
+        <!-- Left: Specimen Plate Viewport (Col 1-3) -->
+        <div class="surface-card w-full aspect-square md:aspect-auto md:h-full md:col-span-3 rounded-sm p-8 overflow-hidden relative group">
+            <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMTIyLCAxMTIsIDEwNCwgMC4xKSIvPjwvc3ZnPg==')] opacity-80 pointer-events-none"></div>
+            <button id="fullscreen-btn" class="absolute top-4 right-4 font-tech text-[10px] text-[#2A2520] hover:text-[#8B1A1A] flex items-center justify-center gap-2 px-3 py-2 border border-[#DDD5C5] hover:border-[#8B1A1A] bg-[#EFE9DC] z-10">
+                <i class="fa-solid fa-expand"></i> [ EXPAND ]
+            </button>
+            <div id="render-target" class="w-full h-full flex items-center justify-center"></div>
+        </div>
+
+        <!-- Right: Control Matrix (Col 4-5) -->
+        <section class="surface-card p-6 rounded-sm space-y-6 md:col-span-2 flex flex-col justify-between">
+            <div class="space-y-6">
+                <header class="flex items-center justify-between border-b border-[#DDD5C5] pb-4">
+                    <h1 class="font-tech text-[11px] font-semibold text-[#2A2520] flex items-center gap-2">
+                        <i class="fa-solid fa-mountain text-xs text-[#8B1A1A]"></i> Synthesis Engine
+                    </h1>
+                    <div class="flex items-center gap-2">
+                        <a href="/docs.html" class="font-tech text-[9px] text-[#7A7068] hover:text-[#8B1A1A] transition-colors flex items-center gap-1 px-2 py-0.5 border border-[#DDD5C5] rounded-sm bg-[#E8E0D0]">
+                            <i class="fa-solid fa-book-open text-[8px]"></i> [ DOCS ]
+                        </a>
+                        <span class="font-tech text-[9px] px-2 py-0.5 bg-[#E8E0D0] border border-[#DDD5C5] text-[#7A7068] font-semibold">
+                            V1.0
+                        </span>
                     </div>
-                </div>
+                </header>
 
-                <!-- 04. Topographical Telemetry Card -->
-                <div class="space-y-1.5">
-                    <label class="block font-tech text-[10px] text-[#7A7068] flex items-center justify-between">
-                        <span>04. TOPOGRAPHICAL_TELEMETRY</span>
-                        <span class="text-[8px] text-[#7A7068]">MORPHOMETRICS</span>
-                    </label>
-                    
-                    <div id="telemetry-card" class="bg-[#E8E0D0] border border-[#DDD5C5] p-3 rounded-xs space-y-2">
-                        <!-- Highlighted Derived Topographical Title -->
+                <div class="space-y-4">
+                    <!-- 01. Aspect Ratio Matrix -->
+                    <div class="space-y-2">
+                        <label class="font-tech text-[9px] text-[#7A7068]">FORMAT_MATRIX</label>
+                        <div class="grid grid-cols-3 gap-2" id="format-matrix">
+                            <button class="ratio-btn py-2 text-[10px] font-tech font-semibold bg-[#E8E0D0]" data-w="9" data-h="16">9:16</button>
+                            <button class="ratio-btn py-2 text-[10px] font-tech font-semibold bg-[#E8E0D0]" data-w="2" data-h="3">2:3</button>
+                            <button class="ratio-btn py-2 text-[10px] font-tech font-semibold bg-[#E8E0D0]" data-w="3" data-h="4">3:4</button>
+                            
+                            <button class="ratio-btn py-2 text-[10px] font-tech font-semibold bg-[#E8E0D0]" data-w="4" data-h="5">4:5</button>
+                            <button class="ratio-btn py-2 text-[10px] font-tech font-semibold bg-[#E8E0D0]" data-w="1" data-h="1">1:1</button>
+                            <button class="ratio-btn py-2 text-[10px] font-tech font-semibold bg-[#E8E0D0]" data-w="5" data-h="4">5:4</button>
+                            
+                            <button class="ratio-btn py-2 text-[10px] font-tech font-semibold bg-[#E8E0D0]" data-w="4" data-h="3">4:3</button>
+                            <button class="ratio-btn py-2 text-[10px] font-tech font-semibold bg-[#E8E0D0]" data-w="3" data-h="2" data-active="true">3:2</button>
+                            <button class="ratio-btn py-2 text-[10px] font-tech font-semibold bg-[#E8E0D0]" data-w="16" data-h="9">16:9</button>
+                        </div>
+                    </div>
+
+                    <!-- 02. Pigment Wash Chroma Palette -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <label class="font-tech text-[9px] text-[#7A7068]">PIGMENT_WASH_PALETTE</label>
+                            <span id="chroma-active-label" class="font-tech text-[8px] text-[#8B1A1A] font-semibold">PINE SOOT</span>
+                        </div>
+                        <div class="grid grid-cols-5 gap-1.5" id="chroma-matrix">
+                            <button class="chroma-btn py-1.5 px-1.5 text-[8.5px] font-tech flex items-center justify-center gap-1 bg-[#E8E0D0]" data-pigment="pine-soot" data-active="true" title="Pine Soot Monochrome">
+                                <span class="w-2 h-2 rounded-full bg-[#2A2520]"></span> SOOT
+                            </button>
+                            <button class="chroma-btn py-1.5 px-1.5 text-[8.5px] font-tech flex items-center justify-center gap-1 bg-[#E8E0D0]" data-pigment="shallow-umber" title="Shallow Umber & Tea">
+                                <span class="w-2 h-2 rounded-full bg-[#8A6E58]"></span> UMBER
+                            </button>
+                            <button class="chroma-btn py-1.5 px-1.5 text-[8.5px] font-tech flex items-center justify-center gap-1 bg-[#E8E0D0]" data-pigment="blue-green" title="Azurite & Malachite">
+                                <span class="w-2 h-2 rounded-full bg-[#2A6C62]"></span> QINGLÜ
+                            </button>
+                            <button class="chroma-btn py-1.5 px-1.5 text-[8.5px] font-tech flex items-center justify-center gap-1 bg-[#E8E0D0]" data-pigment="golden-dusk" title="Golden Ochre">
+                                <span class="w-2 h-2 rounded-full bg-[#A8702A]"></span> GOLDEN
+                            </button>
+                            <button class="chroma-btn py-1.5 px-1.5 text-[8.5px] font-tech flex items-center justify-center gap-1 bg-[#E8E0D0]" data-pigment="mist-ink" title="Atmospheric Slate">
+                                <span class="w-2 h-2 rounded-full bg-[#586472]"></span> MIST
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 03. Narrative Injection Seed -->
+                    <div class="space-y-1.5 pt-1">
+                        <div class="flex justify-between items-center">
+                            <label class="font-tech text-[9px] text-[#7A7068]">NARRATIVE_INJECTION_SEED</label>
+                            <button id="random-btn" class="font-tech text-[9px] text-[#8B1A1A] hover:underline flex items-center gap-1 cursor-pointer">
+                                <i class="fa-solid fa-dice"></i> [ RANDOM NARRATIVE ]
+                            </button>
+                        </div>
+                        <div class="relative group">
+                            <i class="fa-solid fa-terminal absolute left-4 top-1/2 -translate-y-1/2 text-[#7A7068] group-focus-within:text-[#8B1A1A] transition-colors mt-0.5"></i>
+                            <input type="text" id="seed-input" placeholder="Inject narrative sequence..." 
+                                   class="w-full pl-10 pr-4 py-2.5 text-xs font-mono font-medium rounded-sm"
+                                   autocomplete="off" maxlength="128" spellcheck="false" value="Misty Mountain Peaks in Late Autumn Solitude">
+                        </div>
+                    </div>
+
+                    <!-- 04. Recover From ID -->
+                    <div class="space-y-1.5">
+                        <label class="font-tech text-[9px] text-[#7A7068]">RECOVER_FROM_ID</label>
+                        <div class="relative group">
+                            <i class="fa-solid fa-fingerprint absolute left-4 top-1/2 -translate-y-1/2 text-[#7A7068] group-focus-within:text-[#8B1A1A] transition-colors"></i>
+                            <input type="text" id="id-load-input" placeholder="Recover from ID (e.g. LSV-0B-B2493C)..." 
+                                   class="w-full pl-10 pr-4 py-2.5 text-xs font-mono font-medium rounded-sm"
+                                   autocomplete="off" maxlength="18" spellcheck="false">
+                        </div>
+                    </div>
+
+                    <!-- 05. Topographical Telemetry Matrix / Info Card -->
+                    <div class="space-y-2 border border-[#DDD5C5] bg-[#E8E0D0] p-3 rounded-sm">
+                        <div class="flex justify-between items-center border-b border-[#DDD5C5] pb-1.5">
+                            <span class="font-tech text-[9px] font-bold text-[#2A2520]">03 // TOPOGRAPHICAL_TELEMETRY</span>
+                            <span id="accession-badge" class="font-tech text-[8px] text-[#8B1A1A] font-semibold">LSV-00-000000</span>
+                        </div>
+
+                        <!-- Highlighted Derived Title from Narrative -->
                         <div class="border-b border-[#DDD5C5] pb-2 pt-0.5">
                             <div class="flex justify-between items-center text-[9px] font-tech">
                                 <span class="text-[#7A7068] text-[8px] uppercase tracking-wider">DERIVED SHAN SHUI TITLE</span>
-                                <span class="text-[#7A7068] text-[7px] font-mono">SEED &rarr; ID &rarr; TITLE</span>
+                                <span class="text-[#7A7068] text-[7px] font-mono">NARRATIVE &rarr; SEED &rarr; ID &rarr; TITLE</span>
                             </div>
                             <div class="flex items-center gap-2 mt-0.5">
-                                <i class="fa-solid fa-paintbrush text-[#8B1A1A] text-[10px]"></i>
-                                <span id="tel-zh-title" class="text-sm font-bold text-[#8B1A1A] font-serif tracking-widest">烟岚叠嶂图</span>
-                                <span class="text-[#7A7068] text-[10px]">&middot;</span>
-                                <span id="tel-title" class="text-xs font-serif italic font-bold text-[#2A2520] tracking-wide truncate">Montes Nebulosi et Flumina</span>
+                                <i class="fa-solid fa-mountain text-[#8B1A1A] text-[10px]"></i>
+                                <span id="tel-title" class="text-xs font-serif italic font-bold text-[#2A2520] tracking-wide">Nebulae Super Valles</span>
                             </div>
-                            <div id="tel-meaning" class="text-[8px] font-mono text-[#7A7068] italic truncate">Towering granitic spires enveloped in autumn mist with river hermit</div>
+                            <div id="tel-meaning" class="text-[8px] font-mono text-[#7A7068] italic truncate">万壑云烟图 &middot; Endless mountain ravines in morning haze</div>
                         </div>
 
                         <div class="grid grid-cols-2 gap-x-3 gap-y-1.5 text-[9px] font-tech pt-1">
                             <div>
                                 <span class="text-[#7A7068] block text-[8px]">SCROLL FORMAT</span>
-                                <span id="tel-format" class="text-[#2A2520] font-semibold truncate block">Handscroll Leaf [横卷] 3:2</span>
+                                <span id="tel-format" class="text-[#2A2520] font-semibold truncate block">Handscroll Leaf 3:2</span>
                             </div>
                             <div>
                                 <span class="text-[#7A7068] block text-[8px]">MOUNTAIN MORPHOLOGY</span>
-                                <span id="tel-morphology" class="text-[#2A2520] font-semibold truncate block">Granitic Crags & Fissures</span>
+                                <span id="tel-morphology" class="text-[#2A2520] font-semibold truncate block">Granitic Crags</span>
                             </div>
                             <div>
                                 <span class="text-[#7A7068] block text-[8px]">VEGETATION CANOPY</span>
@@ -399,10 +449,14 @@
                                 <span class="text-[#7A7068] block text-[8px]">ESTIMATED SPAN</span>
                                 <span id="tel-span" class="text-[#2A2520] font-semibold">45 Li (22.5 Km)</span>
                             </div>
-                            <div class="col-span-2 flex justify-between items-center pt-1 border-t border-[#DDD5C5]">
+                            <div class="col-span-2">
+                                <span class="text-[#7A7068] block text-[8px]">PIGMENT WASH</span>
+                                <span id="tel-pigment" class="text-[#2A2520] font-semibold">墨黑 &middot; Pine Soot Monochrome</span>
+                            </div>
+                            <div class="col-span-2 flex justify-between items-center pt-0.5 border-t border-[#DDD5C5]">
                                 <div>
-                                    <span class="text-[#7A7068] text-[8px]">PIGMENT: </span>
-                                    <span id="tel-pigment" class="text-[#8B1A1A] font-semibold">墨黑 &middot; Pine Soot</span>
+                                    <span class="text-[#7A7068] text-[8px]">SURVEY SCALE: </span>
+                                    <span class="text-[#2A2520] font-semibold">1:50,000 (10 Li)</span>
                                 </div>
                                 <div>
                                     <span class="text-[#7A7068] text-[8px]">PTR: </span>
@@ -414,53 +468,53 @@
                 </div>
             </div>
 
-            <!-- Action & Export Buttons -->
-            <footer class="space-y-3 pt-3 border-t border-[#DDD5C5]">
-                <div class="flex justify-between items-center bg-[#E8E0D0] px-3 py-1.5 border border-[#DDD5C5]">
+            <!-- Action & Export Footer -->
+            <footer class="space-y-4 pt-4 border-t border-[#DDD5C5]">
+                <div class="flex justify-between items-center bg-[#E8E0D0] px-3 py-2 border border-[#DDD5C5]">
                     <span id="specimen-id" class="font-tech text-[10px] text-[#2A2520] font-semibold">SEQ: LSV-00-000000</span>
-                    <span id="hash-metric" class="font-tech text-[9px] text-[#7A7068]">READY</span>
+                    <span id="hash-metric" class="font-tech text-[9px] text-[#7A7068]">AWAITING...</span>
                 </div>
                 
                 <div class="flex gap-2">
-                    <button id="copy-btn" class="font-tech text-[10px] text-[#2A2520] hover:text-[#8B1A1A] transition-all flex items-center justify-center gap-2 px-4 py-2 border border-[#DDD5C5] hover:border-[#8B1A1A] bg-[#E8E0D0] w-1/2">
+                    <button id="copy-btn" class="font-tech text-[10px] text-[#2A2520] hover:text-[#8B1A1A] transition-all flex items-center justify-center gap-2 px-4 py-2 border border-[#DDD5C5] hover:border-[#8B1A1A] bg-[#E8E0D0] w-1/2 cursor-pointer">
                         <i class="fa-solid fa-code"></i> [ SVG ]
                     </button>
-                    <button id="png-btn" class="font-tech text-[10px] text-[#2A2520] hover:text-[#8B1A1A] transition-all flex items-center justify-center gap-2 px-4 py-2 border border-[#DDD5C5] hover:border-[#8B1A1A] bg-[#E8E0D0] w-1/2">
+                    <button id="png-btn" class="font-tech text-[10px] text-[#2A2520] hover:text-[#8B1A1A] transition-all flex items-center justify-center gap-2 px-4 py-2 border border-[#DDD5C5] hover:border-[#8B1A1A] bg-[#E8E0D0] w-1/2 cursor-pointer">
                         <i class="fa-solid fa-download"></i> [ PNG ]
                     </button>
                 </div>
-                <button id="embed-btn" class="font-tech text-[10px] text-[#7A7068] hover:text-[#8B1A1A] transition-all flex items-center justify-center gap-2 px-4 py-2 border border-[#DDD5C5] hover:border-[#8B1A1A] bg-[#E8E0D0] w-full">
+                <button id="embed-btn" class="font-tech text-[10px] text-[#7A7068] hover:text-[#8B1A1A] transition-all flex items-center justify-center gap-2 px-4 py-2 border border-[#DDD5C5] hover:border-[#8B1A1A] bg-[#E8E0D0] w-full cursor-pointer">
                     <i class="fa-solid fa-share-nodes"></i> [ GENERATE EMBED PROTOCOL ]
                 </button>
             </footer>
         </section>
 
-        <!-- Archival Documentation Section for SEO/AIO -->
-        <section id="specimen-metadata" class="md:col-span-12 surface-card p-8 rounded-sm space-y-8 mt-4">
-            <div class="prose max-w-none text-[#2A2520]">
+        <!-- Archival Metadata Section for SEO/AIO -->
+        <section id="specimen-metadata" class="md:col-span-5 surface-card p-8 rounded-sm space-y-8 mt-6">
+            <div class="prose max-w-none">
                 <h2 class="font-tech text-sm font-semibold border-b border-[#DDD5C5] pb-2 text-[#8B1A1A]">01. ARCHIVAL_LANDSCAPE_OVERVIEW</h2>
-                <p class="text-sm text-[#2A2520] leading-relaxed mt-2">
-                    Landscape Vault is a procedural Chinese landscape painting (Shan Shui / 山水画) synthesis engine and vector plate repository designed according to the Swiss-Archival design system. Adapted from Lingdong Huang's shan-shui-inf (2018), it procedurally synthesizes continuous mountain ridges, rock fissures, river currents, groves of mountain pines, scholar pavilions, and solitary boatmen using pure mathematical noise and procedural vector polygons.
+                <p class="text-sm text-[#2A2520] leading-relaxed">
+                    Landscape Vault is an archival procedural Chinese landscape painting (Shan Shui / 山水画) synthesis engine and vector plate repository designed according to the Swiss-Archival design system. Adapted from Lingdong Huang's shan-shui-inf (2018), it procedurally synthesizes continuous mountain ridges, rock fissures, river currents, groves of mountain pines, scholar pavilions, and solitary boatmen using pure mathematical noise and procedural vector polygons.
                 </p>
 
-                <h2 class="font-tech text-sm font-semibold border-b border-[#DDD5C5] pb-2 text-[#8B1A1A] mt-6">02. PROCEDURAL_SHANSHUI_LOGIC</h2>
-                <p class="text-sm text-[#2A2520] leading-relaxed mt-2">
-                    Every landscape plate is generated through a deterministic pipeline seeded by narrative strings or 32-bit hashes. The generator evaluates multi-octave Perlin noise fields to locate local maxima for grand granitic peaks, builds layered rock textures using wavy polyline sweeps, nests traditional Chinese architecture (thatched cottages, multi-tiered pagodas, arch bridges), and applies painter's depth-sorted occlusion masks. Every specimen is immutably indexed with a losslessly recoverable Accession ID (e.g. <code>LSV-0B-B2493C</code>).
+                <h2 class="font-tech text-sm font-semibold border-b border-[#DDD5C5] pb-2 text-[#8B1A1A] mt-8">02. PROCEDURAL_SHANSHUI_LOGIC</h2>
+                <p class="text-sm text-[#2A2520] leading-relaxed">
+                    By injecting narrative sequences into the matrix, the engine evaluates multi-octave Perlin noise fields to locate local maxima for grand granitic peaks, builds layered rock textures using wavy polyline sweeps, nests traditional Chinese architecture (thatched cottages, multi-tiered pagodas, arch bridges), and applies painter's depth-sorted occlusion masks. Every specimen is an immutable archival record, traceable via its accession identifier (e.g. LSV-0B-B2493C) and memory pointer hash.
                 </p>
 
-                <h2 class="font-tech text-sm font-semibold border-b border-[#DDD5C5] pb-2 text-[#8B1A1A] mt-6">03. ARCHIVAL_EXPORT_PROTOCOL</h2>
-                <p class="text-sm text-[#2A2520] leading-relaxed mt-2">
-                    Plates can be exported as standalone pure vector SVG documents or 300 DPI high-resolution PNG prints. Each exported plate incorporates Swiss-Archival dual drafting borders, a Topographical Survey Scale Bar (10 Li / 5 Km Rule), a Cinnabar Vermilion Seal Chop (朱砂印章 · 山水典藏), and an authentic Hershey vector cursive Latin title.
+                <h2 class="font-tech text-sm font-semibold border-b border-[#DDD5C5] pb-2 text-[#8B1A1A] mt-8">03. ARCHIVAL_EXPORT_PROTOCOL</h2>
+                <p class="text-sm text-[#2A2520] leading-relaxed">
+                    Specimens can be exported as high-resolution standalone SVG documents or 300 DPI PNG prints adhering to the Swiss-Archival design system. Each exported plate incorporates Swiss-Archival dual drafting borders, a Topographical Survey Scale Bar (10 Li / 5 Km Rule), a Cinnabar Vermilion Seal Chop (朱砂印章 &middot; 山水典藏), and an authentic Hershey vector cursive Latin title.
                 </p>
 
-                <h2 class="font-tech text-sm font-semibold border-b border-[#DDD5C5] pb-2 text-[#8B1A1A] mt-6">04. EMBED_INTEGRATION_PROTOCOL</h2>
-                <p class="text-sm text-[#2A2520] leading-relaxed mt-2">
-                    Landscape Vault can be embedded seamlessly into third-party web applications and digital galleries using the <code>mode=embed</code> parameter. The UI automatically transitions to a minimal, distraction-free specimen view with a bone-colored background. Parent windows can communicate dynamically with the iframe via the standardized <code>postMessage</code> API.
+                <h2 class="font-tech text-sm font-semibold border-b border-[#DDD5C5] pb-2 text-[#8B1A1A] mt-8">04. EMBED_INTEGRATION_PROTOCOL</h2>
+                <p class="text-sm text-[#2A2520] leading-relaxed">
+                    Landscape Vault functions as an embeddable service. Utilizing the <code>mode=embed</code> URL parameter, the interface is reduced to a strictly archival specimen view with a bone-colored background, optimized for iframe integration. Developers can control the synthesis engine in real-time via the <code>postMessage</code> API.
                 </p>
 
-                <h2 class="font-tech text-sm font-semibold border-b border-[#DDD5C5] pb-2 text-[#8B1A1A] mt-6">05. PROGRAMMATIC_ARCHIVAL_ACCESS</h2>
-                <p class="text-sm text-[#2A2520] leading-relaxed mt-2">
-                    The underlying synthesis library is exposed globally via <code>window.LandscapeDraw</code> with full CommonJS and AMD compatibility. Developers can generate landscapes, extract morphometrics, and synthesize archival plates in browser or Node.js environments with zero external dependencies.
+                <h2 class="font-tech text-sm font-semibold border-b border-[#DDD5C5] pb-2 text-[#8B1A1A] mt-8">05. PROGRAMMATIC_ARCHIVAL_ACCESS</h2>
+                <p class="text-sm text-[#2A2520] leading-relaxed">
+                    The engine exposes zero-dependency JavaScript access via <code>window.LandscapeDraw</code>. Developers can synthesize landscape specimens, extract morphometrics, and generate archival plates programmatically in Node.js or client-side environments.
                 </p>
 
                 <div class="mt-8 pt-4 border-t border-[#DDD5C5]">
@@ -471,71 +525,13 @@
             </div>
         </section>
         
-        <footer class="md:col-span-12 text-center py-8">
-            <p class="font-tech text-[10px] text-[#7A7068]">LANDSCAPE_VAULT &copy; 2026 &middot; AZZAR_BUDIYANTO &middot; PORT 8088</p>
+        <footer class="md:col-span-5 text-center py-12">
+            <p class="font-tech text-[10px] text-[#7A7068]">LANDSCAPE_VAULT &copy; 2026 | AZZAR_BUDIYANTO</p>
         </footer>
     </main>
 
-    <!-- Fullscreen Specimen Viewer Modal -->
-    <div id="fullscreen-viewer">
-        <div class="relative max-w-full max-h-full flex flex-col items-center p-4">
-            <div class="w-full flex justify-between items-center mb-3 text-[#EFE9DC]">
-                <div class="flex items-center gap-3">
-                    <span id="viewer-title" class="font-serif italic text-sm">Specimen Viewer</span>
-                    <span id="viewer-id" class="font-tech text-[10px] bg-[#2A2520] px-2 py-0.5 border border-[#7A7068]">LSV-00-000000</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <button id="viewer-download-svg" class="font-tech text-[10px] text-[#EFE9DC] hover:text-[#8B1A1A] bg-[#2A2520] border border-[#7A7068] hover:border-[#8B1A1A] px-2.5 py-1 transition-all">
-                        <i class="fa-solid fa-code"></i> SVG
-                    </button>
-                    <button id="viewer-download-png" class="font-tech text-[10px] text-[#EFE9DC] hover:text-[#8B1A1A] bg-[#2A2520] border border-[#7A7068] hover:border-[#8B1A1A] px-2.5 py-1 transition-all">
-                        <i class="fa-solid fa-download"></i> PNG
-                    </button>
-                    <button id="viewer-close" class="font-tech text-xs text-[#EFE9DC] hover:text-[#8B1A1A] px-2 py-1">
-                        <i class="fa-solid fa-xmark text-lg"></i>
-                    </button>
-                </div>
-            </div>
-            <div id="viewer-target" class="flex items-center justify-center">
-                <!-- Large Plate Render -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Embed Protocol Modal -->
-    <div id="embed-modal" class="fixed inset-0 z-50 bg-[#2A2520]/60 backdrop-blur-xs hidden items-center justify-center p-4">
-        <div class="surface-card p-6 rounded-sm max-w-lg w-full space-y-4 border border-[#DDD5C5] shadow-2xl">
-            <div class="flex justify-between items-center border-b border-[#DDD5C5] pb-2">
-                <h3 class="font-tech text-xs text-[#8B1A1A] font-semibold">EMBED_INTEGRATION_PROTOCOL</h3>
-                <button id="embed-close-btn" class="text-xs text-[#7A7068] hover:text-[#8B1A1A]"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            
-            <p class="text-xs text-[#7A7068]">Embed this procedural landscape specimen directly into web applications via an archival iframe plate:</p>
-            
-            <div class="space-y-1.5">
-                <label class="font-tech text-[9px] text-[#7A7068]">IFRAME_CODE_SNIPPET</label>
-                <div class="relative">
-                    <textarea id="embed-code" readonly class="w-full font-mono text-[10px] p-2 h-20 bg-[#E8E0D0] border border-[#DDD5C5] select-all resize-none"></textarea>
-                    <button id="copy-embed-btn" class="absolute top-2 right-2 font-tech text-[8px] bg-[#EFE9DC] border border-[#DDD5C5] px-2 py-0.5 hover:border-[#8B1A1A] hover:text-[#8B1A1A]">
-                        COPY
-                    </button>
-                </div>
-            </div>
-
-            <div class="space-y-1.5">
-                <label class="font-tech text-[9px] text-[#7A7068]">POSTMESSAGE_API_CONTROL</label>
-                <pre class="font-mono text-[9px] p-2 bg-[#E8E0D0] border border-[#DDD5C5] overflow-x-auto text-[#2A2520]">
-iframe.contentWindow.postMessage({
-  seed: "Solitary Mountain in Mist",
-  pigment: "blue-green",
-  w: 16, h: 9
-}, "*");</pre>
-            </div>
-        </div>
-    </div>
-
     <!-- Core Engine Scripts -->
-    <script src="js/landscapedraw.js?v=1.0.1"></script>
+    <script src="js/landscapedraw.js?v=1.0.2"></script>
     <script>
         const DOM = {
             target: document.getElementById('render-target'),
@@ -543,13 +539,7 @@ iframe.contentWindow.postMessage({
             idLoadInput: document.getElementById('id-load-input'),
             randomBtn: document.getElementById('random-btn'),
             accessionBadge: document.getElementById('accession-badge'),
-            specimenId: document.getElementById('specimen-id'),
-            hashMetric: document.getElementById('hash-metric'),
-            dimensionMetric: document.getElementById('dimension-metric'),
-            
-            // Telemetry Elements
             telTitle: document.getElementById('tel-title'),
-            telZhTitle: document.getElementById('tel-zh-title'),
             telMeaning: document.getElementById('tel-meaning'),
             telFormat: document.getElementById('tel-format'),
             telMorphology: document.getElementById('tel-morphology'),
@@ -561,45 +551,38 @@ iframe.contentWindow.postMessage({
             telSpan: document.getElementById('tel-span'),
             telPigment: document.getElementById('tel-pigment'),
             telHash: document.getElementById('tel-hash'),
-            
-            // Buttons
+            hashMetric: document.getElementById('hash-metric'),
+            specimenId: document.getElementById('specimen-id'),
             copyBtn: document.getElementById('copy-btn'),
             pngBtn: document.getElementById('png-btn'),
             embedBtn: document.getElementById('embed-btn'),
             ratioBtns: document.querySelectorAll('.ratio-btn'),
-            pigmentBtns: document.querySelectorAll('.pigment-btn'),
-            pigmentActiveLabel: document.getElementById('pigment-active-label'),
+            chromaBtns: document.querySelectorAll('.chroma-btn'),
+            chromaActiveLabel: document.getElementById('chroma-active-label'),
             
-            // Fullscreen & Modals
+            // Fullscreen Elements
             fullscreenBtn: document.getElementById('fullscreen-btn'),
             fullscreenViewer: document.getElementById('fullscreen-viewer'),
-            viewerTarget: document.getElementById('viewer-target'),
+            viewerContent: document.getElementById('viewer-content'),
             viewerTitle: document.getElementById('viewer-title'),
-            viewerId: document.getElementById('viewer-id'),
+            viewerSeq: document.getElementById('viewer-seq'),
             viewerClose: document.getElementById('viewer-close'),
             viewerDownloadSvg: document.getElementById('viewer-download-svg'),
-            viewerDownloadPng: document.getElementById('viewer-download-png'),
-            
-            embedModal: document.getElementById('embed-modal'),
-            embedCloseBtn: document.getElementById('embed-close-btn'),
-            embedCode: document.getElementById('embed-code'),
-            copyEmbedBtn: document.getElementById('copy-embed-btn')
+            viewerDownloadPng: document.getElementById('viewer-download-png')
         };
 
         const LANDSCAPE_NARRATIVES = [
             "Misty Mountain Peaks in Late Autumn Solitude",
-            "Solitary Fishing Boat on Cold River at Dusk",
-            "Ancient Pines Clinging to Precipitous Cliffs",
-            "Hidden Temple Nestled in Deep Mountain Valley",
-            "Spring Cascades Flowing Through Bamboo Groves",
-            "Thousand Li of Rivers and Emerald Mountains",
-            "Distant Sails Returning in Sunset Mist",
-            "Winter Snow Blanket on High Craggy Peaks",
-            "Wandering Scholar Crossing Archaic Stone Bridge",
-            "Towering Granite Spire Piercing Morning Clouds",
+            "Ancient Pine Hermitage Beneath Towering Granitic Spires",
+            "Solitary Fisherman on Placid River Shallows",
+            "Cascading Ridge Torrents and Bamboo Sanctuary",
+            "Panoramic Continuous River Handscroll at Twilight",
+            "Immortal Pinnacles Veiled in Ascending Clouds",
+            "Two Scholars in Dialogue Under Mountain Willows",
+            "Silent Mountain Ravines and Distant Pagoda",
             "Moonlit Solitude in Mountain Thatched Pavilion",
             "Flying Cranes Above Verdant River Ravine",
-            "Echoing Valleys of Ancient Hermit Hermitage",
+            "Echoing Valleys of Ancient Taoist Hermitage",
             "Atmospheric Ink Cloud Gathering Over Distant Isles",
             "Serene Clear Stream Winding Past Shaded Rocks"
         ];
@@ -640,15 +623,32 @@ iframe.contentWindow.postMessage({
                     return true;
                 } catch (e) {}
             }
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            textarea.style.position = 'fixed';
-            textarea.style.opacity = '0';
-            document.body.appendChild(textarea);
-            textarea.select();
-            const success = document.execCommand('copy');
-            document.body.removeChild(textarea);
-            return success;
+            try {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.position = 'fixed';
+                ta.style.left = '-9999px';
+                ta.style.top = '-9999px';
+                ta.setAttribute('readonly', '');
+                document.body.appendChild(ta);
+                ta.select();
+                const success = document.execCommand('copy');
+                document.body.removeChild(ta);
+                if (success) return true;
+            } catch (e) {}
+            return false;
+        };
+
+        const handleEmbedExport = async () => {
+            const ratio = getActiveRatio();
+            const baseUrl = window.location.origin + window.location.pathname;
+            const seedParam = DOM.seedInput.value ? `&narrative=${encodeURIComponent(DOM.seedInput.value)}` : "";
+            const idParam = DOM.idLoadInput.value ? `&id=${encodeURIComponent(DOM.idLoadInput.value)}` : "";
+            const embedUrl = `${baseUrl}?mode=embed${seedParam}${idParam}&pigment=${currentPigment}&w=${ratio.w}&h=${ratio.h}`;
+            const iframeCode = `<iframe src="${embedUrl}" width="600" height="400" frameborder="0" style="border:1px solid #DDD5C5; border-radius:4px; background:#EFE9DC;"></iframe>`;
+            
+            await copyToClipboard(iframeCode);
+            buttonFeedback(DOM.embedBtn, DOM.embedBtn.innerHTML, '<i class="fa-solid fa-check"></i> [ EMBED_CODE_COPIED ]');
         };
 
         // Core Render Pipeline
@@ -678,17 +678,12 @@ iframe.contentWindow.postMessage({
             });
 
             const fullPlateSvg = LandscapeDraw.generateSvgPlate(currentSpecimen);
-
-            // Mount SVG into render target
             DOM.target.innerHTML = fullPlateSvg;
 
-            // Update Topographical Telemetry
+            // Update Telemetry Matrix
             const m = currentSpecimen.metrics;
-            DOM.accessionBadge.textContent = m.accessionId;
-            DOM.specimenId.textContent = `SEQ: ${m.accessionId}`;
             DOM.telTitle.textContent = m.title;
-            DOM.telZhTitle.textContent = m.zhTitle;
-            DOM.telMeaning.textContent = m.meaning;
+            DOM.telMeaning.innerHTML = `${m.zhTitle} &middot; ${m.meaning}`;
             DOM.telFormat.textContent = m.format;
             DOM.telMorphology.textContent = m.morphology;
             DOM.telVegetation.textContent = m.vegetation;
@@ -700,32 +695,35 @@ iframe.contentWindow.postMessage({
             DOM.telPigment.textContent = m.pigment;
             DOM.telHash.textContent = m.hashHex;
 
-            const dt = (performance.now() - t0).toFixed(1);
-            DOM.hashMetric.textContent = `${dt}MS // ${currentSpecimen.chunkCount} CHUNKS`;
-            DOM.dimensionMetric.textContent = `VIEWPORT: ${currentSpecimen.vWidth} x ${currentSpecimen.vHeight}`;
+            DOM.accessionBadge.textContent = currentSpecimen.id;
+            DOM.specimenId.textContent = `SEQ: ${currentSpecimen.id}`;
 
-            // Update Fullscreen Viewer if active
-            if (DOM.fullscreenViewer.classList.contains('active')) {
-                DOM.viewerTarget.innerHTML = fullPlateSvg;
-                DOM.viewerTitle.textContent = `${m.zhTitle} · ${m.title}`;
-                DOM.viewerId.textContent = m.accessionId;
-            }
+            const tElapsed = (performance.now() - t0).toFixed(1);
+            DOM.hashMetric.textContent = `${tElapsed}MS // ${currentSpecimen.chunkCount} CHUNKS`;
         };
 
-        // Export SVG
+        // Export Standalone SVG
         const handleSVGExport = async () => {
             if (!currentSpecimen) return;
+            const originalHtml = DOM.copyBtn.innerHTML;
             const fullPlateSvg = LandscapeDraw.generateSvgPlate(currentSpecimen);
+
             const blob = new Blob([fullPlateSvg], { type: 'image/svg+xml;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `${currentSpecimen.id}_plate.svg`;
+            a.download = `landscape_${currentSpecimen.id}.svg`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            buttonFeedback(DOM.copyBtn, '<i class="fa-solid fa-code"></i> [ SVG ]', '<i class="fa-solid fa-check"></i> [ DOWNLOADED ]');
+
+            const copied = await copyToClipboard(fullPlateSvg);
+            if (copied) {
+                buttonFeedback(DOM.copyBtn, originalHtml, '<i class="fa-solid fa-check"></i> [ SVG SAVED & COPIED ]');
+            } else {
+                buttonFeedback(DOM.copyBtn, originalHtml, '<i class="fa-solid fa-check"></i> [ SVG SAVED ]');
+            }
         };
 
         // Export High-Res PNG
@@ -755,7 +753,7 @@ iframe.contentWindow.postMessage({
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = `${currentSpecimen.id}_plate_300dpi.png`;
+                    a.download = `landscape_${currentSpecimen.id}_300dpi.png`;
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
@@ -768,40 +766,21 @@ iframe.contentWindow.postMessage({
             }
         };
 
-        // Embed Dialog Handling
-        const handleEmbedExport = () => {
-            if (!currentSpecimen) return;
-            const ratio = getActiveRatio();
-            const baseUrl = window.location.origin || 'https://landscape-vault.glassgallery.my.id';
-            const embedUrl = `${baseUrl}/?id=${currentSpecimen.id}&pigment=${currentPigment}&w=${ratio.w}&h=${ratio.h}&mode=embed`;
-            DOM.embedCode.value = `<iframe src="${embedUrl}" width="100%" height="600" frameborder="0" style="border:1px solid #DDD5C5; background:#EFE9DC;" allowfullscreen></iframe>`;
-            DOM.embedModal.classList.remove('hidden');
-            DOM.embedModal.classList.add('flex');
-        };
-
-        DOM.embedCloseBtn.addEventListener('click', () => {
-            DOM.embedModal.classList.add('hidden');
-            DOM.embedModal.classList.remove('flex');
-        });
-
-        DOM.copyEmbedBtn.addEventListener('click', async () => {
-            await copyToClipboard(DOM.embedCode.value);
-            buttonFeedback(DOM.copyEmbedBtn, 'COPY', 'COPIED');
-        });
-
         // Fullscreen Viewer Handlers
         const openFullscreenViewer = () => {
             if (!currentSpecimen) return;
             const fullPlateSvg = LandscapeDraw.generateSvgPlate(currentSpecimen);
-            DOM.viewerTarget.innerHTML = fullPlateSvg;
+            DOM.viewerContent.innerHTML = fullPlateSvg;
             DOM.viewerTitle.textContent = `${currentSpecimen.metrics.zhTitle} · ${currentSpecimen.metrics.title}`;
-            DOM.viewerId.textContent = currentSpecimen.id;
+            DOM.viewerSeq.textContent = currentSpecimen.id;
             DOM.fullscreenViewer.classList.add('active');
+            DOM.fullscreenViewer.classList.remove('hidden');
         };
 
         const closeFullscreenViewer = () => {
             DOM.fullscreenViewer.classList.remove('active');
-            DOM.viewerTarget.innerHTML = '';
+            DOM.fullscreenViewer.classList.add('hidden');
+            DOM.viewerContent.innerHTML = '';
         };
 
         DOM.fullscreenBtn.addEventListener('click', openFullscreenViewer);
@@ -812,13 +791,11 @@ iframe.contentWindow.postMessage({
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeFullscreenViewer();
-                DOM.embedModal.classList.add('hidden');
-                DOM.embedModal.classList.remove('flex');
             }
         });
 
         DOM.fullscreenViewer.addEventListener('click', (e) => {
-            if (e.target === DOM.fullscreenViewer) {
+            if (e.target === DOM.fullscreenViewer || e.target.classList.contains('backdrop-blur-sm')) {
                 closeFullscreenViewer();
             }
         });
@@ -831,7 +808,7 @@ iframe.contentWindow.postMessage({
                 document.body.dataset.mode = 'embed';
             }
 
-            const seedParam = params.get('seed') || params.get('s');
+            const seedParam = params.get('narrative') || params.get('seed') || params.get('s');
             const idParam = params.get('id');
             const pigmentParam = params.get('pigment') || params.get('color');
             const wParam = params.get('w');
@@ -839,11 +816,11 @@ iframe.contentWindow.postMessage({
 
             if (pigmentParam && LandscapeDraw.PIGMENTS[pigmentParam]) {
                 currentPigment = pigmentParam;
-                DOM.pigmentBtns.forEach(b => {
+                DOM.chromaBtns.forEach(b => {
                     if (b.dataset.pigment === currentPigment) b.setAttribute('data-active', 'true');
                     else b.removeAttribute('data-active');
                 });
-                DOM.pigmentActiveLabel.textContent = currentPigment.replace('-', ' ').toUpperCase();
+                DOM.chromaActiveLabel.textContent = currentPigment.replace('-', ' ').toUpperCase();
             }
 
             if (wParam && hParam) {
@@ -867,8 +844,8 @@ iframe.contentWindow.postMessage({
                 const data = event.data;
                 if (!data || typeof data !== 'object') return;
 
-                if (data.seed) {
-                    DOM.seedInput.value = data.seed;
+                if (data.narrative || data.seed) {
+                    DOM.seedInput.value = data.narrative || data.seed;
                     DOM.idLoadInput.value = "";
                 }
                 if (data.id) {
@@ -877,10 +854,11 @@ iframe.contentWindow.postMessage({
                 }
                 if (data.pigment && LandscapeDraw.PIGMENTS[data.pigment]) {
                     currentPigment = data.pigment;
-                    DOM.pigmentBtns.forEach(b => {
+                    DOM.chromaBtns.forEach(b => {
                         if (b.dataset.pigment === currentPigment) b.setAttribute('data-active', 'true');
                         else b.removeAttribute('data-active');
                     });
+                    DOM.chromaActiveLabel.textContent = currentPigment.replace('-', ' ').toUpperCase();
                 }
                 if (data.w && data.h) {
                     DOM.ratioBtns.forEach(btn => {
@@ -925,7 +903,7 @@ iframe.contentWindow.postMessage({
             requestAnimationFrame(animateTrail);
 
             const updateInteractables = () => {
-                document.querySelectorAll('a, button, input, .ratio-btn, .pigment-btn').forEach(el => {
+                document.querySelectorAll('a, button, input, .ratio-btn, .chroma-btn').forEach(el => {
                     if (el.dataset.cursorHover) return;
                     el.dataset.cursorHover = 'true';
                     el.addEventListener('mouseenter', () => {
@@ -955,12 +933,12 @@ iframe.contentWindow.postMessage({
             });
         });
 
-        DOM.pigmentBtns.forEach(btn => {
+        DOM.chromaBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                DOM.pigmentBtns.forEach(b => b.removeAttribute('data-active'));
+                DOM.chromaBtns.forEach(b => b.removeAttribute('data-active'));
                 btn.setAttribute('data-active', 'true');
                 currentPigment = btn.dataset.pigment;
-                DOM.pigmentActiveLabel.textContent = currentPigment.replace('-', ' ').toUpperCase();
+                DOM.chromaActiveLabel.textContent = currentPigment.replace('-', ' ').toUpperCase();
                 renderSynthesisPipeline();
             });
         });
@@ -978,28 +956,21 @@ iframe.contentWindow.postMessage({
         });
 
         DOM.idLoadInput.addEventListener('input', () => {
-            DOM.seedInput.value = "";
-            renderDebounced();
+            const raw = DOM.idLoadInput.value.trim().toUpperCase();
+            if (raw.length >= 8) {
+                renderDebounced();
+            }
         });
 
         DOM.copyBtn.addEventListener('click', handleSVGExport);
         DOM.pngBtn.addEventListener('click', handlePNGExport);
         DOM.embedBtn.addEventListener('click', handleEmbedExport);
 
-        // Service Worker Registration
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').catch((err) => {
-                    console.log('SW registration error:', err);
-                });
-            });
-        }
-
-        // Initialize App
-        document.addEventListener('DOMContentLoaded', () => {
+        // Boot
+        window.addEventListener('DOMContentLoaded', () => {
             initPostMessage();
-            renderSynthesisPipeline();
             initCustomCursor();
+            renderSynthesisPipeline();
         });
     </script>
 </body>
