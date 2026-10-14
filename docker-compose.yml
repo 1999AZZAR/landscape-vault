@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  landscape-vault:
+    build: .
+    container_name: landscape-vault
+    restart: unless-stopped
+    ports:
+      - "8088:80"
+    environment:
+      - NODE_ENV=production

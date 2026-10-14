@@ -1,0 +1,24 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Safe zone padding for maskable PWA icon -->
+  <rect width="512" height="512" fill="#EFE9DC"/>
+  <rect x="80" y="80" width="352" height="352" stroke="#8B1A1A" stroke-width="4"/>
+  <path d="M256 80V432" stroke="#8B1A1A" stroke-width="2" stroke-dasharray="6 6" opacity="0.3"/>
+  <path d="M80 256H432" stroke="#8B1A1A" stroke-width="2" stroke-dasharray="6 6" opacity="0.3"/>
+
+  <!-- Mountain Peak -->
+  <path d="M140 370 Q180 290 220 200 Q255 170 280 230 Q315 310 380 370 Z" fill="#2A2520" fill-opacity="0.08" stroke="#2A2520" stroke-width="4.5" stroke-linejoin="round"/>
+  <path d="M220 200 Q235 250 250 320 Q265 350 280 370" stroke="#2A2520" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+
+  <!-- Cranes -->
+  <path d="M310 140 Q325 130 340 140 M325 130 L325 145" stroke="#2A2520" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M345 125 Q360 115 375 125 M360 115 L360 130" stroke="#2A2520" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Water & Boat -->
+  <path d="M110 375 C160 370 210 380 260 375 M280 385 C330 380 380 390 410 385" stroke="#7A7068" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+  <path d="M165 355 Q185 367 205 355 Z" fill="#2A2520" stroke="#2A2520" stroke-width="2.5"/>
+  <line x1="185" y1="340" x2="182" y2="355" stroke="#2A2520" stroke-width="2.5"/>
+
+  <!-- Seal -->
+  <rect x="350" y="350" width="45" height="45" fill="#B83227" fill-opacity="0.12" stroke="#B83227" stroke-width="2.5"/>
+  <text x="372" y="378" font-family="'Noto Serif SC', serif" font-weight="bold" font-size="18" fill="#B83227" text-anchor="middle">山</text>
+</svg>

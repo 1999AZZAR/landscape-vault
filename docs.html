@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Landscape Vault Technical Documentation: Procedural Shan Shui synthesis engine, JavaScript API, embed protocols, and vector plate generation.">
+    <title>Technical Documentation | Landscape Vault</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        :root {
+            --archival-bg: #EFE9DC;
+            --archival-fg: #2A2520;
+            --archival-surface: #F7F3EB;
+            --archival-accent: #8B1A1A;
+            --archival-muted: #DDD5C5;
+            --archival-meta: #7A7068;
+            --grid-color: rgba(122, 112, 104, 0.08);
+        }
+
+        body { 
+            background-color: var(--archival-bg); 
+            background-image: 
+                linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+            background-size: 30px 30px;
+            color: var(--archival-fg); 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .font-tech { 
+            font-family: 'JetBrains Mono', monospace; 
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .surface-card { 
+            background: var(--archival-surface); 
+            border: 1px solid var(--archival-muted); 
+            box-shadow: 0 4px 24px -12px rgba(42, 37, 32, 0.08);
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(42, 37, 32, 0.06);
+            padding: 0.15rem 0.35rem;
+            border-radius: 2px;
+            font-size: 0.88em;
+        }
+
+        pre {
+            background: var(--archival-bg);
+            border-left: 3px solid var(--archival-accent);
+            padding: 1rem;
+            overflow-x: auto;
+            font-size: 0.82em;
+            margin: 0.85rem 0;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .noise-layer {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.04;
+            mix-blend-mode: multiply;
+        }
+
+        .nav-link:hover { color: var(--archival-accent); }
+    </style>
+</head>
+<body class="min-h-screen p-4 sm:p-8">
+    <div class="max-w-4xl mx-auto space-y-8 relative z-10">
+        <!-- Documentation Header -->
+        <header class="flex items-center justify-between border-b border-[#DDD5C5] pb-6">
+            <div class="space-y-1">
+                <a href="/" class="font-tech text-[10px] text-[#7A7068] hover:text-[#8B1A1A] transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-left"></i> RETURN_TO_VAULT
+                </a>
+                <h1 class="font-tech text-xl font-bold text-[#2A2520]">TECHNICAL_DOCUMENTATION</h1>
+                <p class="text-xs text-[#7A7068]">ARCHIVAL SHAN SHUI & PROCEDURAL LANDSCAPE SYNTHESIS PROTOCOLS</p>
+            </div>
+            <div class="text-right hidden sm:block">
+                <p class="font-tech text-[10px] text-[#7A7068]">VERSION: 1.0.0</p>
+                <p class="font-tech text-[10px] text-[#7A7068]">PORT: 8088</p>
+            </div>
+        </header>
+
+        <!-- Navigation Matrix -->
+        <nav class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px] font-tech">
+            <a href="#overview" class="surface-card p-2 text-center hover:border-[#8B1A1A] transition-colors">01. OVERVIEW</a>
+            <a href="#pipeline" class="surface-card p-2 text-center hover:border-[#8B1A1A] transition-colors">02. PIPELINE</a>
+            <a href="#api" class="surface-card p-2 text-center hover:border-[#8B1A1A] transition-colors">03. API_SPEC</a>
+            <a href="#embed" class="surface-card p-2 text-center hover:border-[#8B1A1A] transition-colors">04. EMBED_POSTMSG</a>
+        </nav>
+
+        <!-- 01. Overview -->
+        <section id="overview" class="surface-card p-6 sm:p-8 space-y-4">
+            <h2 class="font-tech text-sm font-bold text-[#8B1A1A] border-b border-[#DDD5C5] pb-2">01. EXECUTIVE_ARCHITECTURE_OVERVIEW</h2>
+            <p class="text-xs text-[#2A2520] leading-relaxed">
+                Landscape Vault is an archival procedural generation engine synthesizing Chinese classical landscape painting (Shan Shui / 山水画) scrolls, album leaves, and architectural plates. It is adapted from Lingdong Huang's seminal engine <em>shan-shui-inf</em> (2018) and re-engineered according to the Swiss-Archival design system of Azzar Budiyanto.
+            </p>
+            <p class="text-xs text-[#2A2520] leading-relaxed">
+                The engine outputs 100% deterministic vector SVG documents that incorporate layered rock facets, mountain pines, pagodas, bridges, river ripples, flying cranes, Swiss-Archival dual drafting borders, a Topographical Survey Scale Bar (10 Li / 5 Km Rule), a Cinnabar Vermilion Seal Chop (朱砂印章 · 山水典藏), and an engraved Hershey cursive vector Latin title.
+            </p>
+        </section>
+
+        <!-- 02. Generation Pipeline -->
+        <section id="pipeline" class="surface-card p-6 sm:p-8 space-y-4">
+            <h2 class="font-tech text-sm font-bold text-[#8B1A1A] border-b border-[#DDD5C5] pb-2">02. PROCEDURAL_SYNTHESIS_PIPELINE</h2>
+            <p class="text-xs text-[#2A2520] leading-relaxed">
+                The synthesis engine operates through five sequential phases:
+            </p>
+            <ol class="list-decimal list-inside text-xs text-[#2A2520] space-y-2">
+                <li><strong>Narrative Seed Hashing:</strong> Computes a 32-bit FNV-1a hash from the narrative string to seed the isolated PRNG and Perlin Noise engines deterministically.</li>
+                <li><strong>Topographical Planning:</strong> Samples noise octaves across the horizontal axis to determine peak locations, ridge heights, and valley depressions. Distant peaks and crane flocks are deployed in the upper third of the canvas.</li>
+                <li><strong>Vector Linework & Texture Synthesis:</strong> Executes Lingdong Huang's stroke algorithms, generating layered rock fractures (<code>Mount.mountain</code>), flat islands (<code>Mount.flatMount</code>), architectural structures (<code>Arch.arch01</code>-<code>04</code>), boats (<code>Arch.boat01</code>), and river ripples (<code>water</code>).</li>
+                <li><strong>Depth-Sorted Occlusion:</strong> Organizes visual chunks in painter's depth order along the vertical axis (<code>y</code>), utilizing white occlusion polygons that blend cleanly into the Xuan paper plate via <code>mix-blend-mode: multiply</code>.</li>
+                <li><strong>Archival Framing & Calligraphy:</strong> Injects drafting borders, metric survey rule, cinnabar seal chop, and Hershey vector cursive calligraphy into the final SVG plate.</li>
+            </ol>
+        </section>
+
+        <!-- 03. API Specification -->
+        <section id="api" class="surface-card p-6 sm:p-8 space-y-4">
+            <h2 class="font-tech text-sm font-bold text-[#8B1A1A] border-b border-[#DDD5C5] pb-2">03. JAVASCRIPT_API_REFERENCE</h2>
+            <p class="text-xs text-[#2A2520] leading-relaxed">
+                Landscape Vault exposes a zero-dependency UMD module via <code>window.LandscapeDraw</code>:
+            </p>
+            
+            <h3 class="font-tech text-xs text-[#2A2520] font-semibold mt-4">LandscapeDraw.synthesize(seedInput, options)</h3>
+            <p class="text-xs text-[#7A7068]">Synthesizes a procedural landscape specimen and returns all telemetry, SVG elements, and dimensions.</p>
+            <pre><code>const specimen = LandscapeDraw.synthesize("Misty Mountain Peaks in Late Autumn Solitude", {
+  width: 1200,
+  height: 800,
+  pigment: "pine-soot" // "pine-soot" | "shallow-umber" | "blue-green" | "golden-dusk" | "mist-ink"
+});
+
+console.log(specimen.id); // e.g. "LSV-0B-B2493C"
+console.log(specimen.metrics.title); // e.g. "Nebulae Super Valles"
+console.log(specimen.metrics.zhTitle); // e.g. "万壑云烟图"</code></pre>
+
+            <h3 class="font-tech text-xs text-[#2A2520] font-semibold mt-4">LandscapeDraw.generateSvgPlate(data, options)</h3>
+            <p class="text-xs text-[#7A7068]">Generates a complete standalone SVG document complete with archival borders, survey scale rule, and vermilion seal chop.</p>
+            <pre><code>const svgString = LandscapeDraw.generateSvgPlate(specimen);
+// Save to file or inject into DOM</code></pre>
+
+            <h3 class="font-tech text-xs text-[#2A2520] font-semibold mt-4">LandscapeDraw.renderToCanvas(data, canvas, options)</h3>
+            <p class="text-xs text-[#7A7068]">Renders the specimen onto an HTML5 canvas at any target resolution for high-resolution 300 DPI PNG export.</p>
+            <pre><code>const canvas = document.createElement('canvas');
+canvas.width = 2400;
+canvas.height = 1600;
+await LandscapeDraw.renderToCanvas(specimen, canvas);
+const pngDataUrl = canvas.toDataURL('image/png');</code></pre>
+        </section>
+
+        <!-- 04. Embed & PostMessage -->
+        <section id="embed" class="surface-card p-6 sm:p-8 space-y-4">
+            <h2 class="font-tech text-sm font-bold text-[#8B1A1A] border-b border-[#DDD5C5] pb-2">04. EMBED_INTEGRATION_PROTOCOL</h2>
+            <p class="text-xs text-[#2A2520] leading-relaxed">
+                Add <code>mode=embed</code> to any Landscape Vault URL to enable distraction-free specimen rendering optimized for iframes:
+            </p>
+            <pre><code>&lt;iframe 
+  src="https://landscape-vault.glassgallery.my.id/?id=LSV-0B-B2493C&amp;pigment=pine-soot&amp;w=3&amp;h=2&amp;mode=embed" 
+  width="100%" 
+  height="600" 
+  frameborder="0" 
+  style="border:1px solid #DDD5C5; background:#EFE9DC;"&gt;
+&lt;/iframe&gt;</code></pre>
+
+            <h3 class="font-tech text-xs text-[#2A2520] font-semibold mt-4">Dynamic postMessage Controller</h3>
+            <pre><code>// Send new landscape parameters to embedded iframe
+const iframe = document.querySelector('iframe');
+iframe.contentWindow.postMessage({
+  seed: "Solitary Fishing Boat on Cold River at Dusk",
+  pigment: "blue-green",
+  w: 16,
+  h: 9
+}, "*");</code></pre>
+        </section>
+
+        <footer class="border-t border-[#DDD5C5] pt-6 flex justify-between items-center text-[10px] font-tech text-[#7A7068]">
+            <p>LANDSCAPE_VAULT // TECHNICAL DOCUMENTATION PROTOCOL</p>
+            <p>&copy; 2026 AZZAR BUDIYANTO</p>
+        </footer>
+    </div>
+</body>
+</html>

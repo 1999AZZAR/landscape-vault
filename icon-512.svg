@@ -1,0 +1,39 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" fill="#EFE9DC"/>
+  <rect x="54" y="54" width="404" height="404" stroke="#8B1A1A" stroke-width="4"/>
+  <path d="M256 54V458" stroke="#8B1A1A" stroke-width="2" stroke-dasharray="8 8" opacity="0.3"/>
+  <path d="M54 256H458" stroke="#8B1A1A" stroke-width="2" stroke-dasharray="8 8" opacity="0.3"/>
+
+  <!-- Distant Mountain Silhouettes -->
+  <path d="M80 290 Q150 240 230 270 T380 250 T440 285" stroke="#7A7068" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.6"/>
+  <path d="M110 260 Q190 210 270 230 T410 220" stroke="#7A7068" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.4"/>
+
+  <!-- Cranes in Flight -->
+  <path d="M320 130 Q335 120 350 130 M335 120 L335 136" stroke="#2A2520" stroke-width="3" stroke-linecap="round"/>
+  <path d="M360 115 Q375 105 390 115 M375 105 L375 121" stroke="#2A2520" stroke-width="3" stroke-linecap="round"/>
+  <path d="M340 145 Q355 135 370 145 M355 135 L355 151" stroke="#2A2520" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Grand Middleground Mountain Peak -->
+  <path d="M120 390 Q170 300 215 200 Q255 165 280 230 Q320 320 400 390 Z" fill="#2A2520" fill-opacity="0.08" stroke="#2A2520" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M215 200 Q230 250 245 330 Q260 360 280 390" stroke="#2A2520" stroke-width="3.5" stroke-linecap="round" opacity="0.7"/>
+
+  <!-- Pine Tree on Ridge -->
+  <path d="M190 320 C180 300 160 305 145 295 M180 305 C165 290 140 295 130 285" stroke="#2A2520" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Water Surface Ripples -->
+  <path d="M90 395 C145 390 200 400 255 395 M280 405 C335 400 390 410 430 405" stroke="#7A7068" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+  <path d="M130 420 C185 415 240 425 295 420 M320 430 C360 425 400 435 420 430" stroke="#7A7068" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+
+  <!-- Solitary Fishing Boat -->
+  <path d="M150 370 Q175 385 200 370 Z" fill="#2A2520" stroke="#2A2520" stroke-width="3"/>
+  <line x1="175" y1="350" x2="170" y2="370" stroke="#2A2520" stroke-width="3"/>
+  <line x1="172" y1="360" x2="155" y2="380" stroke="#2A2520" stroke-width="2.5"/>
+
+  <!-- Vermilion Seal Stamp -->
+  <rect x="375" y="375" width="55" height="55" fill="#B83227" fill-opacity="0.1" stroke="#B83227" stroke-width="3"/>
+  <rect x="383" y="383" width="39" height="39" fill="none" stroke="#B83227" stroke-width="1.5"/>
+  <text x="402" y="410" font-family="'Noto Serif SC', serif" font-weight="bold" font-size="22" fill="#B83227" text-anchor="middle">山</text>
+
+  <!-- Archival Corner Registration Marks -->
+  <path d="M44 64H64 M54 44V64 M468 64H448 M458 44V64 M44 448H64 M54 468V448 M468 448H448 M458 468V448" stroke="#7A7068" stroke-width="2.5"/>
+</svg>

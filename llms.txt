@@ -1,0 +1,13 @@
+# Landscape Vault (Procedural Chinese Shan Shui Archive)
+> Procedural Chinese classical landscape painting (山水画) scroll generator, Gongbi ink wash vector plates, and topographical telemetry repository.
+
+## Canonical Endpoints
+- Web Service: https://landscape-vault.glassgallery.my.id/
+- Technical Documentation: https://landscape-vault.glassgallery.my.id/docs.html
+- Service Worker: https://landscape-vault.glassgallery.my.id/sw.js
+- Web App Manifest: https://landscape-vault.glassgallery.my.id/manifest.json
+
+## Integration Protocol
+- Embed Mode: `https://landscape-vault.glassgallery.my.id/?id=LSV-0B-B2493C&pigment=pine-soot&w=3&h=2&mode=embed`
+- PostMessage API: `iframe.contentWindow.postMessage({ seed: "Misty Mountain", pigment: "blue-green", w: 16, h: 9 }, "*")`
+- Local Port: `8088`
