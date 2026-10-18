@@ -524,6 +524,7 @@
 
     <!-- Core Engine Scripts -->
     <script src="js/landscapedraw.js?v=1.0.2"></script>
+    <script src="js/generational-cache.js?v=1.0.0"></script>
     <script>
         const DOM = {
             target: document.getElementById('render-target'),
@@ -643,8 +644,30 @@
             buttonFeedback(DOM.embedBtn, DOM.embedBtn.innerHTML, '<i class="fa-solid fa-check"></i> [ EMBED_CODE_COPIED ]');
         };
 
-        // Core Render Pipeline
-        const renderSynthesisPipeline = () => {
+        const applyTelemetry = (specimen, tElapsed, isCached) => {
+            const m = specimen.metrics;
+            DOM.telTitle.textContent = m.title;
+            DOM.telMeaning.innerHTML = `${m.zhTitle} &middot; ${m.meaning}`;
+            DOM.telFormat.textContent = m.format;
+            DOM.telMorphology.textContent = m.morphology;
+            DOM.telVegetation.textContent = m.vegetation;
+            DOM.telHydrography.textContent = m.hydrography;
+            DOM.telHabitation.textContent = m.habitation;
+            DOM.telPresence.textContent = m.humanPresence;
+            DOM.telPeaks.textContent = m.peakCount;
+            DOM.telSpan.textContent = m.liSpan;
+            DOM.telPigment.textContent = m.pigment;
+            DOM.telHash.textContent = m.hashHex;
+
+            DOM.accessionBadge.textContent = specimen.id;
+            DOM.specimenId.textContent = `SEQ: ${specimen.id}`;
+
+            const cacheTag = isCached ? ' [GEN_CACHE]' : '';
+            DOM.hashMetric.textContent = `${tElapsed.toFixed(1)}MS // ${specimen.chunkCount} CHUNKS${cacheTag}`;
+        };
+
+        // Core Render Pipeline with Generational Cache
+        const renderSynthesisPipeline = async () => {
             const t0 = performance.now();
             const ratio = getActiveRatio();
             const baseDim = 1200;
@@ -663,6 +686,20 @@
             }
             if (!seedValue) seedValue = "Misty Mountain Peaks in Late Autumn Solitude";
 
+            const cacheKey = typeof GenerationalCache !== 'undefined'
+                ? GenerationalCache.makeKey('LV', seedValue, ratio.w, ratio.h, currentPigment, 'static')
+                : null;
+
+            if (cacheKey) {
+                const cached = await GenerationalCache.get(cacheKey);
+                if (cached && cached.specimen && cached.svg) {
+                    currentSpecimen = cached.specimen;
+                    DOM.target.innerHTML = cached.svg;
+                    applyTelemetry(currentSpecimen, performance.now() - t0, true);
+                    return;
+                }
+            }
+
             currentSpecimen = LandscapeDraw.synthesize(seedValue, {
                 width: width,
                 height: height,
@@ -672,26 +709,14 @@
             const fullPlateSvg = LandscapeDraw.generateSvgPlate(currentSpecimen);
             DOM.target.innerHTML = fullPlateSvg;
 
-            // Update Telemetry Matrix
-            const m = currentSpecimen.metrics;
-            DOM.telTitle.textContent = m.title;
-            DOM.telMeaning.innerHTML = `${m.zhTitle} &middot; ${m.meaning}`;
-            DOM.telFormat.textContent = m.format;
-            DOM.telMorphology.textContent = m.morphology;
-            DOM.telVegetation.textContent = m.vegetation;
-            DOM.telHydrography.textContent = m.hydrography;
-            DOM.telHabitation.textContent = m.habitation;
-            DOM.telPresence.textContent = m.humanPresence;
-            DOM.telPeaks.textContent = m.peakCount;
-            DOM.telSpan.textContent = m.liSpan;
-            DOM.telPigment.textContent = m.pigment;
-            DOM.telHash.textContent = m.hashHex;
+            if (cacheKey && typeof GenerationalCache !== 'undefined') {
+                GenerationalCache.set(cacheKey, {
+                    specimen: currentSpecimen,
+                    svg: fullPlateSvg
+                });
+            }
 
-            DOM.accessionBadge.textContent = currentSpecimen.id;
-            DOM.specimenId.textContent = `SEQ: ${currentSpecimen.id}`;
-
-            const tElapsed = (performance.now() - t0).toFixed(1);
-            DOM.hashMetric.textContent = `${tElapsed}MS // ${currentSpecimen.chunkCount} CHUNKS`;
+            applyTelemetry(currentSpecimen, performance.now() - t0, false);
         };
 
         // Export Standalone SVG

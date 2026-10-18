@@ -1,3 +1,10 @@
+# ==============================================================================
+# ⚠️ PRODUCTION HOSTING MOVED TO BAKSO (100.122.202.31)
+# Do NOT run docker-compose up on servy.
+# Production is served by Caddy on hostdata-bakso.
+# To deploy changes to bakso, run: ./deploy.sh
+# See architecture details in: ../VAULTS_DEPLOYMENT.md
+# ==============================================================================
 version: '3.8'
 
 services:
